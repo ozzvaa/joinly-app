@@ -81,4 +81,4 @@ docker compose up -d
 
 ## Avtor
 
-Jan Milošič
+Jan Milošič in Matevž Ozvatič
