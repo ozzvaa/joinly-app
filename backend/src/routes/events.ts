@@ -8,7 +8,19 @@ const PAGE_SIZE = 12;
 const DIFFICULTIES = ["lahko", "srednje", "zahtevno"];
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function validateEvent(body: any): string | null {
+interface EventInput {
+  title: string;
+  description: string;
+  categoryId: string;
+  locationName: string;
+  region: string;
+  startsAt: string;
+  endsAt: string;
+  difficulty: string;
+  capacity: number;
+}
+
+function validateEvent(body: EventInput): string | null {
   const { title, description, categoryId, locationName, region, startsAt, endsAt, difficulty, capacity } = body;
 
   if (!title || !description || !categoryId || !locationName || !region || !startsAt || !endsAt || !difficulty || !capacity) {
