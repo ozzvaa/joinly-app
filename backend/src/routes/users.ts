@@ -4,7 +4,15 @@ import { requireAuth } from "../middleware/auth";
 
 const router = Router();
 
-function toProfileEvent(row: any) {
+interface ProfileEvent {
+  id: string;
+  title: string;
+  starts_at: Date;
+  location_name: string;
+  category_name: string;
+}
+
+function toProfileEvent(row: ProfileEvent) {
   return {
     id: row.id,
     title: row.title,

@@ -6,13 +6,6 @@ export interface AuthUser {
   role: string;
 }
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AuthUser;
-    }
-  }
-}
 
 export function readUser(req: Request, _res: Response, next: NextFunction) {
   const token = req.cookies.token;
@@ -20,6 +13,7 @@ export function readUser(req: Request, _res: Response, next: NextFunction) {
     try {
       req.user = jwt.verify(token, process.env.JWT_SECRET as string) as AuthUser;
     } catch {
+        req.user = undefined;
     }
   }
   next();

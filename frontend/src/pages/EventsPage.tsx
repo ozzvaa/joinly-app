@@ -9,7 +9,7 @@ export default function EventsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     fetch(`/api/events?page=${page}`)
       .then((res) => res.json())
       .then((data) => {
