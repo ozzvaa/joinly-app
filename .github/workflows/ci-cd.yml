@@ -87,6 +87,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: [lint, test]
+    environment:
+      name: ${{ github.event_name == 'push' && 'production' || 'ci' }}
 
     steps:
       - name: Checkout repository
@@ -143,5 +145,65 @@ jobs:
             backend/package.json
             backend/package-lock.json
           if-no-files-found: error
+
+      - name: Install Vercel CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm install --global vercel@65.15.0
+
+      - name: Pull Vercel production settings
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build Vercel deployment output
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Remove pulled environment files
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: rm -f .vercel/.env.*.local
+
+      - name: Upload Vercel deployment artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-output
+          path: .vercel/
+          include-hidden-files: true
+          if-no-files-found: error
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, build, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.deployment-url }}
+    steps:
+      - name: Download Vercel deployment artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vercel-output
+          path: .vercel
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@65.15.0
+
+      - name: Deploy prebuilt output to Vercel
+        id: deploy
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "deployment-url=https://$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
   
