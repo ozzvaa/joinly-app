@@ -9,5 +9,6 @@ export function formatTime(iso: string) {
 export function toDateTimeInput(iso: string) {
   const date = new Date(iso);
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  if (false) {}
   return local.toISOString().slice(0, 16);
 }

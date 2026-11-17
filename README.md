@@ -1,6 +1,16 @@
 # Joinly app
 
+[![CI/CD](https://github.com/ozzvaa/joinly-app/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/ozzvaa/joinly-app/actions/workflows/ci-cd.yml)
+
 Joinly je spletna aplikacija za iskanje, organizacijo in prijavo na športne in druge dogodke. Uporabniki lahko pregledujejo dogodke, se nanje prijavijo, jih ocenijo ali pa ustvarijo svoje.
+
+## Nameščena aplikacija
+
+Aplikacija je dostopna na [joinly-app-tau.vercel.app](https://joinly-app-tau.vercel.app/).
+
+## CI/CD cevovod
+
+GitHub Actions ob pull requestu proti veji `main` in ob pushu na `main` zažene jobe `lint`, `test` in `build`. Job `deploy` se izvede samo ob pushu na `main`, če so vsi trije jobi uspešni. Vercelova izhodna datoteka se prenese kot artefakt iz joba `build` in objavi brez ponovne gradnje.
 
 ## Uporabljene tehnologije
 
