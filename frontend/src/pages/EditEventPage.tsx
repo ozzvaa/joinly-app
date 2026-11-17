@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import EventForm from "../components/EventForm";
 import type { EventDetail, EventFormValues } from "../types";
 import { toDateTimeInput } from "../utils/format";
+import { apiUrl } from "../utils/api";
 
 export default function EditEventPage() {
   const { id } = useParams();
@@ -11,7 +12,7 @@ export default function EditEventPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`/api/events/${id}`)
+    fetch(apiUrl(`/api/events/${id}`))
       .then((res) => res.json())
       .then((data: EventDetail) => {
         if (!data.isOrganizer) {

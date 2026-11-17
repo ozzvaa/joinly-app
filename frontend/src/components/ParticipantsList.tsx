@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { formatDate, formatTime } from "../utils/format";
+import { apiUrl } from "../utils/api";
 
 interface Participant {
   name: string;
@@ -10,7 +11,7 @@ export default function ParticipantsList({ eventId }: { eventId: string }) {
   const [participants, setParticipants] = useState<Participant[]>([]);
 
   useEffect(() => {
-    fetch(`/api/events/${eventId}/participants`)
+    fetch(apiUrl(`/api/events/${eventId}/participants`))
       .then((res) => res.json())
       .then((data) => setParticipants(data));
   }, [eventId]);

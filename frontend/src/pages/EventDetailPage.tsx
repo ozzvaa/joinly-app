@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import type { EventDetail } from "../types";
 import { formatDate, formatTime } from "../utils/format";
 import ParticipantsList from "../components/ParticipantsList";
+import { apiUrl } from "../utils/api";
 
 
 function DetailRow({ icon, label, value }: { icon: string; label: string; value: string }) {
@@ -30,13 +31,13 @@ const { id } = useParams();
   async function handleDelete() {
     if (!window.confirm("Ali res želite izbrisati ta dogodek?")) return;
 
-    const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
+    const res = await fetch(apiUrl(`/api/events/${id}`), { method: "DELETE" });
     if (res.ok) navigate("/");
   }
 
   async function handleParticipation(method: "POST" | "DELETE") {
     setActionError("");
-    const res = await fetch(`/api/events/${id}/participation`, { method });
+    const res = await fetch(apiUrl(`/api/events/${id}/participation`), { method });
     const data = await res.json();
 
     if (!res.ok) {
@@ -47,7 +48,7 @@ const { id } = useParams();
   }
 
   useEffect(() => {
-    fetch(`/api/events/${id}`).then(async (res) => {
+    fetch(apiUrl(`/api/events/${id}`)).then(async (res) => {
       if (!res.ok) {
         setNotFound(true);
         return;

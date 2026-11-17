@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { DIFFICULTIES, REGIONS } from "../constants";
 import type { EventFormValues } from "../types";
+import { apiUrl } from "../utils/api";
 
 interface Category {
   id: string;
@@ -22,7 +23,7 @@ export default function EventForm({ initialValues, method, url, submitLabel, onS
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/categories")
+    fetch(apiUrl("/api/categories"))
       .then((res) => res.json())
       .then((data) => setCategories(data));
   }, []);
@@ -50,7 +51,7 @@ export default function EventForm({ initialValues, method, url, submitLabel, onS
       return;
     }
 
-    const res = await fetch(url, {
+    const res = await fetch(apiUrl(url), {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

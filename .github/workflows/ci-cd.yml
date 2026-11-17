@@ -109,6 +109,8 @@ jobs:
       - name: Build frontend
         run: npm run build
         working-directory: frontend
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
 
       # Backend
       - name: Install backend dependencies
@@ -117,6 +119,10 @@ jobs:
 
       - name: Build backend
         run: npm run build
+        working-directory: backend
+
+      - name: Install backend production dependencies
+        run: npm ci --omit=dev
         working-directory: backend
 
       # Upload artifacts
@@ -131,5 +137,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/dist/
+          path: |
+            backend/dist/
+            backend/node_modules/
+            backend/package.json
+            backend/package-lock.json
           if-no-files-found: error
+
+  

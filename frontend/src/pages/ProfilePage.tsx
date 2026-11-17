@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { Profile, ProfileEvent } from "../types";
 import { formatDate, formatTime } from "../utils/format";
+import { apiUrl } from "../utils/api";
 
 type TabKey = "upcoming" | "history" | "organized";
 
@@ -20,7 +21,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!user) return;
-    fetch("/api/users/me")
+    fetch(apiUrl("/api/users/me"))
       .then((res) => res.json())
       .then((data) => setProfile(data));
   }, [user, reloadKey]);
@@ -30,7 +31,7 @@ export default function ProfilePage() {
   if (!profile) return <p className="muted">Nalagam profil ...</p>;
 
   async function handleLeave(eventId: string) {
-    const res = await fetch(`/api/events/${eventId}/participation`, { method: "DELETE" });
+    const res = await fetch(apiUrl(`/api/events/${eventId}/participation`), { method: "DELETE" });
     if (res.ok) setReloadKey((key) => key + 1);
   }
 
