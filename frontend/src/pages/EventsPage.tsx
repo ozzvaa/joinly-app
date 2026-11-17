@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import EventCard from "../components/EventCard";
 import type { EventListItem } from "../types";
+import { apiUrl } from "../utils/api";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<EventListItem[]>([]);
@@ -10,7 +11,7 @@ export default function EventsPage() {
 
   useEffect(() => {
     // setLoading(true);
-    fetch(`/api/events?page=${page}`)
+    fetch(apiUrl(`/api/events?page=${page}`))
       .then((res) => res.json())
       .then((data) => {
         setEvents(data.events);
